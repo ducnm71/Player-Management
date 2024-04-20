@@ -11,12 +11,27 @@ import DriveEtaOutlinedIcon from '@mui/icons-material/DriveEtaOutlined';
 import EqualizerOutlinedIcon from '@mui/icons-material/EqualizerOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
+import Swal from 'sweetalert2'
+
 
 const LayoutAdmin = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const logout = () => {
+    localStorage.removeItem('is_login')
+    Swal.fire({
+      title: "Good job!",
+      text: "Đăng xuất thành công!",
+      icon: "success"
+    });
+    setTimeout(() => {
+      window.location.replace("http://localhost:5173/")
+    }, 1500)
+  }
+
   return (
     <Layout className='h-screen'>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -67,7 +82,7 @@ const LayoutAdmin = ({ children }) => {
           <Typography.Title style={{marginBottom: 0}} level={5}>Quản lý bãi đỗ xe thông minh</Typography.Title>
         </Space>
         <div>
-        <div className='flex items-center justify-between gap-1 ml-6'>
+        <div onClick={logout} className='flex items-center justify-between gap-1 ml-6 cursor-pointer'>
           <LogoutOutlinedIcon/>
           <p className='text-black'>Đăng xuất</p>  
         </div>
