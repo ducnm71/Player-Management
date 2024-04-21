@@ -1,24 +1,43 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect} from 'react';
+import axios from "axios";
 
 import { Typography, Table, Button, Input, Space } from "antd"
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
+import CachedOutlinedIcon from '@mui/icons-material/CachedOutlined';
 
 import LayoutAdmin from "../Layout/LayoutAdmin"
-import data from "../assets/bienso.json"
-
-
-
-
-const dataSource = [
-  ...data
-]
-
-
-
 
 
 const Transport = () => {
+
+  const [data, setData] = useState([])
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/transport", config)
+      .then((res) => {
+        setData(res.data)
+      })
+      .catch(err=> {
+        console.log(err);
+      })
+  }, [])
+
+  const resfresh = () => {
+    axios.get("http://localhost:5000/transport", config)
+      .then((res) => {
+        setData(res.data)
+      })
+      .catch(err=> {
+        console.log(err);
+      })
+  }
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -137,25 +156,32 @@ const Transport = () => {
     {
       title: 'Biển số xe',
       dataIndex: 'template',
-      key: 'template'
+      key: 'template',
+      ...getColumnSearchProps('template')
     },
     {
       title: 'Thời gian vào',
-      dataIndex: 'created_at',
-      key: 'created_at',
-      ...getColumnSearchProps('created_at')
+      dataIndex: 'timeIn',
+      key: 'timeIn',
+      ...getColumnSearchProps('timeIn')
     },
     {
       title: 'Thời gian ra',
-      dataIndex: 'updated_at',
-      key: 'updated_at'
+      dataIndex: 'timeOut',
+      key: 'timeOut'
     }
   ]
 
   return (
     <LayoutAdmin>
-        <Typography.Title level={5}>Quản lý bãi đỗ</Typography.Title>
-        <Table columns={columns} dataSource={dataSource} />
+        <div className='flex justify-between'>
+          <Typography.Title level={5}>Quản lý bãi đỗ</Typography.Title>
+          <div onClick={resfresh} className='flex gap-1 cursor-pointer'>
+            <CachedOutlinedIcon/>
+            <p>Refresh</p>
+          </div>
+        </div>
+        <Table columns={columns} dataSource={data} />
     </LayoutAdmin>
   )
 }

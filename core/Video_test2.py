@@ -2,10 +2,13 @@ import math
 import cv2
 import numpy as np
 import Preprocess
+import database
 
 import json
 import os
 from datetime import datetime
+import time
+
 
 path = "D:\\WorkSpace\\Xu-ly-anh\\ui\\src\\assets\\bienso.json"
 
@@ -40,12 +43,10 @@ kNearest.train(npaFlattenedImages, cv2.ml.ROW_SAMPLE, npaClassifications)
 
 # Read video
 cap = cv2.VideoCapture(0)
-arrayResult = []
-lastIReuslt = {}
-#while (cap.isOpened()):
-while (True):
-    cv2.waitKey(5)
+dataArray = []
 
+while (True):
+    cv2.waitKey(20)
     # Image preprocessing
     ret, img = cap.read()
     tongframe = tongframe + 1
@@ -170,55 +171,32 @@ while (True):
                 cv2.putText(img, strFinalString, (topy, topx), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 255, 255), 1)
                 n = n + 1
                 biensotimthay = biensotimthay + 1
-                #print("Bien so tim thay", strFinalString)
                 cv2.imshow("a", cv2.cvtColor(roi, cv2.COLOR_BGR2RGB))
                 print("Biển số xe đã nhận dạng:", strFinalString)
                 text = first_line + " - " + second_line
-                jsonResult = {
-                    "key" : strFinalString,
+                dataArray.append({
+                    "key": strFinalString,
                     "template": text,
-                    "created_at":  datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
-                    "status": 0 #1 la ra, 0 la vao
-                }
+                    "timeIn": datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+                })
+                if len(dataArray) == 5:
+                    lastItem = dataArray[4]
+                    checkTemplate = database.findOne({"template": lastItem["template"]})
+                    if checkTemplate == None:
+                        database.insertOne(lastItem["key"], lastItem["template"], lastItem["timeIn"])
+                    else:
+                        if checkTemplate['timeOut'] == "":
+                            timeOut = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+                            database.updateOne({"template": checkTemplate["template"], "timeIn": checkTemplate["timeIn"]}, {"timeOut": timeOut})
+                        else:
+                            database.insertOne(lastItem["key"], lastItem["template"], lastItem["timeIn"])
+                    dataArray = []
                 
-                # append to arrayResult
-                lastIReuslt = jsonResult
-                # with open("bienso.json", "a", encoding="utf-8") as file:
-                #     file.write("Biển số xe: " + text + "\n")
     imgcopy = cv2.resize(img, None, fx=0.5, fy=0.5)
     cv2.imshow('CAM CHECK', imgcopy)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     
-    if cv2.waitKey(1) & 0xFF == ord('s'):
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as file:
-                arrayResult = json.load(file)
-        else:
-            arrayResult = []
-        # check exitst item bey key field
-        isExist = False
-        for item in arrayResult:
-            if item["key"] == lastIReuslt["key"] and item["status"] == int(0):
-                isExist = True
-                break
-        if not isExist:
-            print("append to json file")
-            print(lastIReuslt)
-            arrayResult.append(lastIReuslt)
-        else:
-            # update status item 
-            for item in arrayResult:
-                if item["key"] == lastIReuslt["key"] and item["status"] == int(0):
-                    item["status"] = 1
-                    item["updated_at"] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-                    break
-        with open(path, "w", encoding="utf-8") as file:
-            json.dump(arrayResult, file, ensure_ascii=False)
-    
-# write last item to json file
-
-# append last item of arrayResult to json file
 
 cap.release()
 cv2.destroyAllWindows()
