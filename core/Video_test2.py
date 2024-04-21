@@ -177,19 +177,10 @@ while (True):
                 dataArray.append({
                     "key": strFinalString,
                     "template": text,
-                    "timeIn": datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
                 })
                 if len(dataArray) == 5:
                     lastItem = dataArray[4]
-                    checkTemplate = database.findOne({"template": lastItem["template"]})
-                    if checkTemplate == None:
-                        database.insertOne(lastItem["key"], lastItem["template"], lastItem["timeIn"])
-                    else:
-                        if checkTemplate['timeOut'] == "":
-                            timeOut = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-                            database.updateOne({"template": checkTemplate["template"], "timeIn": checkTemplate["timeIn"]}, {"timeOut": timeOut})
-                        else:
-                            database.insertOne(lastItem["key"], lastItem["template"], lastItem["timeIn"])
+                    database.insertOne(lastItem)
                     dataArray = []
                 
     imgcopy = cv2.resize(img, None, fx=0.5, fy=0.5)
