@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme, Flex, Typography, Space } from 'antd';
 const { Header, Sider, Content, Footer } = Layout;
@@ -44,18 +43,13 @@ const LayoutAdmin = ({ children }) => {
             {
               key: '1',
               icon: <DriveEtaOutlinedIcon />,
-              label: 'Phương Tiện',
+              label: 'Người chơi',
             },
             {
               key: '2',
               icon: <EqualizerOutlinedIcon />,
               label: 'Thống kê',
-            },
-            {
-              key: '3',
-              icon: <UserOutlined />,
-              label: 'Nhân viên',
-            },
+            }
           ]}
         />
         
@@ -79,7 +73,7 @@ const LayoutAdmin = ({ children }) => {
           }}
         />
         <Space>
-          <Typography.Title style={{marginBottom: 0}} level={5}>Quản lý bãi đỗ xe thông minh</Typography.Title>
+          <Typography.Title style={{marginBottom: 0}} level={5}>Quản lý người tham gia trò chơi</Typography.Title>
         </Space>
         <div>
         <div onClick={logout} className='flex items-center justify-between gap-1 ml-6 cursor-pointer'>
@@ -105,7 +99,7 @@ const LayoutAdmin = ({ children }) => {
         </Content>
         <Footer>
           <p className='text-center'>
-            Xung Số ©2024 Created by Nhóm 7 
+          Ứng dụng máy tính @2024 Created by ducnm71 
           </p>
         </Footer>
       </Layout>

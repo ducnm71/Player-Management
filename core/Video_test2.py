@@ -42,7 +42,7 @@ kNearest = cv2.ml.KNearest_create()  # instantiate KNN object
 kNearest.train(npaFlattenedImages, cv2.ml.ROW_SAMPLE, npaClassifications)
 
 # Read video
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 dataArray = []
 
 while (True):

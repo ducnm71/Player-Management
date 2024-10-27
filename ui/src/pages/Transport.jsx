@@ -11,7 +11,7 @@ import LayoutAdmin from "../Layout/LayoutAdmin"
 
 const Transport = () => {
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState([])     
 
   const config = {
     headers: {
@@ -20,18 +20,19 @@ const Transport = () => {
   }
 
   useEffect(() => {
-    axios.get("http://localhost:5000/transport", config)
+    axios.get("http://localhost:5000/player", config)   
       .then((res) => {
-        setData(res.data)
+        setData(res.data)  
       })
       .catch(err=> {
         console.log(err);
       })
   }, [])
 
-  const resfresh = () => {
-    axios.get("http://localhost:5000/transport", config)
+  const resfresh = () => {       
+    axios.get("http://localhost:5000/player", config)
       .then((res) => {
+        setData([])
         setData(res.data)
       })
       .catch(err=> {
@@ -51,7 +52,7 @@ const Transport = () => {
     clearFilters();
     setSearchText('');
   };
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex) => ({  
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
       <div
         style={{
@@ -63,7 +64,7 @@ const Transport = () => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}   //lấy ra dữ liệu từ input để lọc
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
@@ -73,7 +74,7 @@ const Transport = () => {
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}   //bắt sự kiện lọc
             icon={<SearchOutlined />}
             size="small"
             style={{
@@ -84,7 +85,7 @@ const Transport = () => {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => clearFilters && handleReset(clearFilters)}  //reset bộ lọc
             size="small"
             style={{
               width: 90,
@@ -147,17 +148,11 @@ const Transport = () => {
       ),
   });
 
-  const columns = [
+  const columns = [ 
     {
       title: 'Mã thẻ',
       dataIndex: 'key',
       key: 'key'
-    },
-    {
-      title: 'Biển số xe',
-      dataIndex: 'template',
-      key: 'template',
-      ...getColumnSearchProps('template')
     },
     {
       title: 'Thời gian vào',
@@ -166,22 +161,27 @@ const Transport = () => {
       ...getColumnSearchProps('timeIn')
     },
     {
-      title: 'Thời gian ra',
-      dataIndex: 'timeOut',
-      key: 'timeOut'
-    }
+      title: 'Cân nặng',
+      dataIndex: 'weight',
+      key: 'weight'
+    },
+    {
+      title: 'Chiều cao',
+      dataIndex: 'height',
+      key: 'height'
+    },
   ]
 
   return (
     <LayoutAdmin>
         <div className='flex justify-between'>
-          <Typography.Title level={5}>Quản lý bãi đỗ</Typography.Title>
+          <Typography.Title level={5}>Quản lý Người chơi</Typography.Title>
           <div onClick={resfresh} className='flex gap-1 cursor-pointer'>
             <CachedOutlinedIcon/>
             <p>Refresh</p>
           </div>
         </div>
-        <Table columns={columns} dataSource={data} />
+        <Table columns={columns} dataSource={data}/>
     </LayoutAdmin>
   )
 }

@@ -10,6 +10,7 @@ const connectDB = require('./config/database')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const transportRouter = require('./routes/transport')
+const playerRouter = require('./routes/player')
 
 var app = express();
 
@@ -32,6 +33,7 @@ connectDB();
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/transport', transportRouter)
+app.use('/player', playerRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
