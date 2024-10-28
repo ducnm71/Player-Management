@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import img from "../assets/img-login.jpg";
+import img from "../assets/img-player.webp";
 import Swal from 'sweetalert2'
 
 const Login = () => {
@@ -53,7 +53,7 @@ const Login = () => {
         </div>
         <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
           <div className="flex flex-col">
-          <h1 className="text-3xl font-semibold text-center">Quản lý bãi đỗ xe</h1>
+          <h1 className="text-3xl font-semibold text-center">Quản lý người chơi</h1>
           <h1 className="text-2xl font-semibold mb-4">Login</h1>
           </div>
           <form onSubmit={submitFormLogin}>
