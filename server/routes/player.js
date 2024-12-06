@@ -6,4 +6,8 @@ router.post('/', playerController.insert)
 
 router.get('/', playerController.list)
 
+router.put('/:id', playerController.updateById)
+
+router.delete('/:id', playerController.deleteById)
+
 module.exports = router;
